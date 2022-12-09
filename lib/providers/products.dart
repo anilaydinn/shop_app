@@ -7,6 +7,9 @@ import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
+  final String authToken;
+
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     return [..._items];
@@ -23,7 +26,8 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     final url = Uri.https(
         'shop-app-f889f-default-rtdb.europe-west1.firebasedatabase.app',
-        '/products.json');
+        '/products.json',
+        {'auth': authToken});
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
